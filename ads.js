@@ -69,7 +69,7 @@ function loadAds(event) {
   console.log("Loading ads");
 
   var adsRequest = new google.ima.AdsRequest();
-  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?'+'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
+  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/23081990290/rajdeep-git776.github.io_VAST_Test&description_url=https%3A%2F%2Frajdeep-git776.github.io%2F&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
 
   adsRequest.linearAdSlotWidth = videoElement.clientWidth;
   adsRequest.linearAdSlotHeight = videoElement.clientHeight;
