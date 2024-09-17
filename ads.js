@@ -1,69 +1,109 @@
-// Define constants for video dimensions
-const VIDEO_WIDTH = 600;
-const VIDEO_HEIGHT = 380;
+var videoElement;
+var adsLoaded = false;
+var adContainer;
+var adDisplayContainer;
+var adsLoader;
+var adsManager;
 
-// Get references to DOM elements
-const videoElement = document.getElementById('video-element');
-const adContainer = document.getElementById('ad-container');
+window.addEventListener('load', function(event) {
+  videoElement = document.getElementById('video-element');
+  
+  // Set video element to muted to allow autoplay
+  videoElement.muted = true; // Mute the video to allow autoplay
 
-let adsManager;
-let adsLoader;
-let adDisplayContainer;
-let intervalTimer;
+  // Automatically initialize IMA SDK and load ads
+  initializeIMA();
+  videoElement.pause();  // Pause content for ad loading
+  loadAds(event);
+});
 
-// Initialize and start the video ad
-function startVideo(vastTagUrl) {
-  requestAds(vastTagUrl);
+function resizeAdToWebView(widthWV, heightWV) {
+  var aspectRatio = 16 / 9;  // Maintain the 16:9 aspect ratio
+
+  var width = widthWV;
+  var height = heightWV;
+
+  var vidPlayerWidth = width;
+  var vidPlayerHeight = width / aspectRatio;
+
+  if (vidPlayerHeight > height) {
+    vidPlayerHeight = height;
+    vidPlayerWidth = height * aspectRatio;
+  }
+
+  // Set the video player size
+  const videoPlayer = document.getElementById('video-container');
+  const videoElement = document.getElementById('video-element');
+
+  videoPlayer.style.width = widthWV + 'px';
+  videoPlayer.style.height = heightWV + 'px';
+  
+  videoElement.style.width = widthWV;
+  videoElement.style.height = heightWV;
+
+  // Resize the ad container
+  if (adsManager) {
+    adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
+  }
 }
 
-// Create and initialize the ad display container
-function createAdDisplayContainer() {
+function initializeIMA() {
+  console.log("Initializing IMA");
+
+  adContainer = document.getElementById('ad-container');
+  adContainer.addEventListener('click', adContainerClick);
+
   adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoElement);
-}
-
-// Request ads from the IMA SDK
-function requestAds(vastTagUrl) {
-  createAdDisplayContainer();
-  adDisplayContainer.initialize();
-  videoElement.load();
-
   adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
-  adsLoader.getSettings().setVpaidMode(google.ima.ImaSdkSettings.VpaidMode.ENABLED);
+  // Listen for ads loading or errors
+  adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, onAdsManagerLoaded, false);
+  adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError, false);
 
-  adsLoader.addEventListener(
-    google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-    onAdsManagerLoaded,
-    false
-  );
-  adsLoader.addEventListener(
-    google.ima.AdErrorEvent.Type.AD_ERROR,
-    onAdError,
-    false
-  );
+  // Notify AdsLoader when content is complete
+  videoElement.addEventListener('ended', function() {
+    if (adsManager) {
+      adsManager.contentComplete();
+    }
+    if (adsManager) {
+      adsManager.destroy();
+    }
+  });
+}
 
-  const adsRequest = new google.ima.AdsRequest();
-  adsRequest.adTagUrl = 'https://your-vast-tag-url.com/vast.xml'; // Replace with your VAST tag URL
-  adsRequest.linearAdSlotWidth = VIDEO_WIDTH;
-  adsRequest.linearAdSlotHeight = VIDEO_HEIGHT;
-  adsRequest.nonLinearAdSlotWidth = VIDEO_WIDTH;
-  adsRequest.nonLinearAdSlotHeight = VIDEO_HEIGHT;
+function loadAds(event) {
+  if (adsLoaded) {
+    return;
+  }
+  adsLoaded = true;
+  event.preventDefault();
 
+  console.log("Loading ads");
+
+  var adsRequest = new google.ima.AdsRequest();
+  
+  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?' +
+    'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
+
+  adsRequest.linearAdSlotWidth = videoElement.clientWidth;
+  adsRequest.linearAdSlotHeight = videoElement.clientHeight;
+  adsRequest.nonLinearAdSlotWidth = videoElement.clientWidth;
+  adsRequest.nonLinearAdSlotHeight = videoElement.clientHeight / 3;
+
+  adDisplayContainer.initialize();  // Ensure it's called after user interaction
   adsLoader.requestAds(adsRequest);
 }
 
-// Handle when ads manager is loaded
 function onAdsManagerLoaded(adsManagerLoadedEvent) {
-  const adsRenderingSettings = new google.ima.AdsRenderingSettings();
-  adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
+  console.log("AdsManager loaded");
 
-  adsManager = adsManagerLoadedEvent.getAdsManager(videoElement, adsRenderingSettings);
+  adsManager = adsManagerLoadedEvent.getAdsManager(videoElement);
 
+  // Attach event listeners to AdsManager
   adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.CLICK, onAdEvent);
   adsManager.addEventListener(google.ima.AdEvent.Type.LOADED, onAdEvent);
   adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, onAdEvent);
   adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, onAdEvent);
@@ -71,60 +111,45 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   adsManager.addEventListener(google.ima.AdEvent.Type.MIDPOINT, onAdEvent);
   adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE, onAdEvent);
 
+  // Resize to match web view dimensions
+  resizeAdToWebView(videoElement.clientWidth, videoElement.clientHeight);
+
   try {
-    adsManager.init(VIDEO_WIDTH, VIDEO_HEIGHT, google.ima.ViewMode.NORMAL);
-    adsManager.start();
+    adsManager.init(videoElement.clientWidth, videoElement.clientHeight, google.ima.ViewMode.NORMAL);
+    adsManager.start();  // Start the ad playback after it's loaded
   } catch (adError) {
+    console.log('AdsManager could not be started: ', adError);
     videoElement.play();
   }
 }
 
-// Handle ad events
-function onAdEvent(adEvent) {
-  const ad = adEvent.getAd();
-  switch (adEvent.type) {
-    case google.ima.AdEvent.Type.STARTED:
-      document.getElementById('page-content').style.display = 'none';
-      intervalTimer = setInterval(() => {
-        const remainingTime = adsManager.getRemainingTime();
-      }, 300);
-      break;
-    case google.ima.AdEvent.Type.COMPLETE:
-      document.getElementById('page-content').style.display = 'block';
-      clearInterval(intervalTimer);
-      break;
-    case google.ima.AdEvent.Type.CLICK:
-      const clickThroughUrl = ad.getClickThroughUrl();
-      if (clickThroughUrl) {
-        window.open(clickThroughUrl, '_blank');
-      }
-      break;
-    case google.ima.AdEvent.Type.FIRST_QUARTILE:
-    case google.ima.AdEvent.Type.MIDPOINT:
-    case google.ima.AdEvent.Type.THIRD_QUARTILE:
-      console.log(`Ad event: ${adEvent.type}`);
-      break;
-  }
-}
-
-// Handle ad errors
 function onAdError(adErrorEvent) {
-  adsManager.destroy();
+  console.error("Ad Error: ", adErrorEvent.getError());
+  if (adsManager) {
+    adsManager.destroy();
+  }
+  videoElement.play(); // Fallback to playing video without ads
 }
 
-// Handle content pause
 function onContentPauseRequested() {
+  console.log('Content paused for ad playback');
   videoElement.pause();
 }
 
-// Handle content resume
 function onContentResumeRequested() {
+  console.log('Resuming content after ads');
   videoElement.play();
 }
 
-// Start the ad automatically when the page loads
-window.onload = function() {
-  const vastTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?' +
-    'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator='; // Replace with your VAST tag URL
-  startVideo(vastTagUrl);
-};
+function onAdEvent(adEvent) {
+  console.log('Ad event: ' + adEvent.type);
+}
+
+function adContainerClick(event) {
+  console.log("Ad container clicked");
+  if (videoElement.paused) {
+    videoElement.play();
+  } else {
+    videoElement.pause();
+  }
+}
