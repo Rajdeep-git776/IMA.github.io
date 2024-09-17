@@ -12,8 +12,6 @@ window.addEventListener('load', function(event) {
   playButton.addEventListener('click', function(event) {
     event.preventDefault();
 
-      // test comment
-
     if (!adsLoaded) {
       // Initialize the IMA SDK and load ads
       initializeIMA();
@@ -26,41 +24,28 @@ window.addEventListener('load', function(event) {
 });
 
 function resizeAdToWebView(widthWV, heightWV) {
+  var width = widthWV;
+  var height = heightWV;
 
-  // var width = window.innerWidth;
-  // var height = window.innerHeight;
+  var widthMargin = width / 10;
+  var heightMargin = height / 10;
 
-    var width = widthWV;
-    var height = heightWV;
+  var vidPlayerWidth = width - widthMargin;
+  var vidPlayerHeight = height - heightMargin;
 
-    var widthMargin = width/10;
-    var heightMargin = height/10;
-
-    var vidPlayerWidth = width - widthMargin;
-    var vidPlayerHeight = height - heightMargin;
-
- 
-
-    // Apply the new dimensions to the video element
-
+  // Apply the new dimensions to the video element and the ads manager
   if (adsManager) {
-    // Resize the AdsManager to match the web view dimensions
     adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
   }
 
-  const videoPlayer = document.getElementById('videoPlayer');
-
-  videoPlayer.style.width = videoElement.width + 'px';
-  videoPlayer.style.height = videoElement.height + 'px';
+  const videoPlayer = document.getElementById('video-container'); // Corrected ID
+  videoPlayer.style.width = vidPlayerWidth + 'px';
+  videoPlayer.style.height = vidPlayerHeight + 'px';
 }
 
+// Trigger resize on window resize
 window.addEventListener('resize', function(event) {
-  // if (adsManager) {
-  //   var width = videoElement.clientWidth;
-  //   var height = videoElement.clientHeight;
-  //   adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
-  resizeAdToWebView();
-  
+  resizeAdToWebView(window.innerWidth, window.innerHeight);
 });
 
 function initializeIMA() {
@@ -97,7 +82,8 @@ function loadAds(event) {
   console.log("Loading ads");
 
   var adsRequest = new google.ima.AdsRequest();
-  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?'+'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
+  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?' +
+    'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
 
   adsRequest.linearAdSlotWidth = videoElement.clientWidth;
   adsRequest.linearAdSlotHeight = videoElement.clientHeight;
@@ -118,20 +104,18 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.LOADED,onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.STARTED,onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE,onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.FIRST_QUARTILE,onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.MIDPOINT,onAdEvent);
-  adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE,onAdEvent);
-  
+  adsManager.addEventListener(google.ima.AdEvent.Type.LOADED, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.STARTED, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.FIRST_QUARTILE, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.MIDPOINT, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE, onAdEvent);
 
-  // Changed from clientWidth and ClientHeight to innerHeight and innerWidth
-  var width = videoElement.innerWidth;
-  var height = videoElement.innerHeight;
+  // Resize to match web view dimensions
+  resizeAdToWebView(videoElement.clientWidth, videoElement.clientHeight);
 
   try {
-    adsManager.init(width, height, google.ima.ViewMode.NORMAL);
+    adsManager.init(videoElement.clientWidth, videoElement.clientHeight, google.ima.ViewMode.NORMAL);
     adsManager.start();  // Start the ad playback after it's loaded
   } catch (adError) {
     console.log('AdsManager could not be started: ', adError);
