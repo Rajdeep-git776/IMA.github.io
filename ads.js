@@ -105,9 +105,9 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE,onAdEvent);
   
 
-
-  var width = videoElement.clientWidth;
-  var height = videoElement.clientHeight;
+  // Changed from clientWidth and ClientHeight to innerHeight and innerWidth.
+  var width = videoElement.innerWidth;
+  var height = videoElement.innerHeight;
 
   try {
     adsManager.init(width, height, google.ima.ViewMode.NORMAL);
