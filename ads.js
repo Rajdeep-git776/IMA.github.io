@@ -52,6 +52,8 @@ adsLoader.addEventListener(
   videoElement.addEventListener('ended', function() {
     if (adsManager) {
       adsManager.contentComplete();
+    }else if (adsManager) {
+      adsManager.destroy();  // Safely destroy adsManager when video ends
     }
   });
 
@@ -103,28 +105,25 @@ function onContentResumeRequested() {
 }
 
 function onAdError(adErrorEvent) {
-  // Handle the error logging.
-  console.log(adErrorEvent.getError());
-  if(adsManager) {
+  console.error("Ad Error: ", adErrorEvent.getError());
+  if (adsManager) {
     adsManager.destroy();
   }
+  videoElement.play();  // Fallback to playing video without ads
 }
 
+
 function loadAds(event) {
-  // Prevent this function from running on if there are already ads loaded
-  if(adsLoaded) {
+  if (adsLoaded) {
     return;
   }
   adsLoaded = true;
-
-  // Prevent triggering immediate playback when ads are loading
   event.preventDefault();
 
   console.log("loading ads");
 
-  // Initialize the container. Must be done via a user action on mobile devices.
   videoElement.load();
-  adDisplayContainer.initialize();
+  adDisplayContainer.initialize();  // Ensure this is called after a user interaction
 
   var width = videoElement.clientWidth;
   var height = videoElement.clientHeight;
@@ -132,8 +131,7 @@ function loadAds(event) {
     adsManager.init(width, height, google.ima.ViewMode.NORMAL);
     adsManager.start();
   } catch (adError) {
-    // Play the video without ads, if an error occurs
-    console.log("AdsManager could not be started");
-    videoElement.play();
+    console.error("AdsManager could not be started: ", adError);
+    videoElement.play();  // Play video without ads if there is an error
   }
 }
