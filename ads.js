@@ -27,11 +27,11 @@ window.addEventListener('load', function(event) {
 
 function resizeAdToWebView(widthWV, heightWV) {
 
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  // var width = window.innerWidth;
+  // var height = window.innerHeight;
 
-    // var width = widthWV;
-    // var height = heightWV;
+    var width = widthWV;
+    var height = heightWV;
 
   if (adsManager) {
     // Resize the AdsManager to match the web view dimensions
