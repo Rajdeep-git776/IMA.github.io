@@ -105,12 +105,12 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE,onAdEvent);
   
 
-  // Changed from clientWidth and ClientHeight to innerHeight and innerWidth.
+  // Changed from clientWidth and ClientHeight to innerHeight and innerWidth
   var width = videoElement.innerWidth;
   var height = videoElement.innerHeight;
 
   try {
-    adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+    adsManager.init(width, height, google.ima.ViewMode.NORMAL);
     adsManager.start();  // Start the ad playback after it's loaded
   } catch (adError) {
     console.log('AdsManager could not be started: ', adError);
