@@ -110,7 +110,7 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   var height = videoElement.innerHeight;
 
   try {
-    adsManager.init(width, height, google.ima.ViewMode.NORMAL);
+    adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
     adsManager.start();  // Start the ad playback after it's loaded
   } catch (adError) {
     console.log('AdsManager could not be started: ', adError);
