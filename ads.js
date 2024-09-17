@@ -11,8 +11,12 @@ window.addEventListener('load', function(event) {
   videoElement = document.getElementById('video-element');
   var playButton = document.getElementById('play-button');
   playButton.addEventListener('click', function(event) {
-    videoElement.play();
-  });
+    if (!adsLoaded) {
+      initializeIMA(); // Initialize the ad system
+      loadAds(event);  // Load and play ads
+    }
+ });
+ 
 });
 
 // Make the AdsManager responsive
@@ -46,7 +50,9 @@ adsLoader.addEventListener(
 
   // Let the AdsLoader know when the video has ended
   videoElement.addEventListener('ended', function() {
-    adsLoader.contentComplete();
+    if (adsManager) {
+      adsManager.contentComplete();
+    }
   });
 
   var adsRequest = new google.ima.AdsRequest();
