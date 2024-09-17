@@ -15,7 +15,7 @@ window.addEventListener('load', function(event) {
     if (!adsLoaded) {
       // Initialize the IMA SDK and load ads
       initializeIMA();
-      videoElement.pause();
+      videoElement.pause();  // Pause content for ad loading
       loadAds(event);
     } else {
       videoElement.play();
@@ -36,17 +36,15 @@ function initializeIMA() {
 
   adContainer = document.getElementById('ad-container');
   adContainer.addEventListener('click', adContainerClick);
-  
-  adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoElement);
-  adDisplayContainer.initialize(); // Ensure this is called after user interaction
 
+  adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoElement);
   adsLoader = new google.ima.AdsLoader(adDisplayContainer);
 
-  // Listen for when ads are loaded or if an error occurs
+  // Listen for ads loading or errors
   adsLoader.addEventListener(google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, onAdsManagerLoaded, false);
   adsLoader.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError, false);
 
-  // Notify AdsLoader when the video content is finished
+  // Notify AdsLoader when content is complete
   videoElement.addEventListener('ended', function() {
     if (adsManager) {
       adsManager.contentComplete();
@@ -67,15 +65,14 @@ function loadAds(event) {
   console.log("Loading ads");
 
   var adsRequest = new google.ima.AdsRequest();
-  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?' + 
-    'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
+  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?'+'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
 
   adsRequest.linearAdSlotWidth = videoElement.clientWidth;
   adsRequest.linearAdSlotHeight = videoElement.clientHeight;
   adsRequest.nonLinearAdSlotWidth = videoElement.clientWidth;
   adsRequest.nonLinearAdSlotHeight = videoElement.clientHeight / 3;
 
-  // Request ads
+  adDisplayContainer.initialize();  // Ensure it's called after user interaction
   adsLoader.requestAds(adsRequest);
 }
 
@@ -84,7 +81,7 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
 
   adsManager = adsManagerLoadedEvent.getAdsManager(videoElement);
 
-  // Attach event listeners to the AdsManager
+  // Attach event listeners to AdsManager
   adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
@@ -95,7 +92,7 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
 
   try {
     adsManager.init(width, height, google.ima.ViewMode.NORMAL);
-    adsManager.start();
+    adsManager.start();  // Start the ad playback after it's loaded
   } catch (adError) {
     console.log('AdsManager could not be started: ', adError);
     videoElement.play();
