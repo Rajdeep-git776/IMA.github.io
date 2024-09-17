@@ -39,17 +39,19 @@ function resizeAdToWebView(widthWV, heightWV) {
     var vidPlayerWidth = width - widthMargin;
     var vidPlayerHeight = height - heightMargin;
 
-    const videoPlayer = document.getElementById('videoPlayer');
+ 
 
     // Apply the new dimensions to the video element
-    videoPlayer.style.width = vidPlayerWidth + 'px';
-    videoPlayer.style.height = vidPlayerHeight + 'px';
-
 
   if (adsManager) {
     // Resize the AdsManager to match the web view dimensions
     adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
   }
+
+  const videoPlayer = document.getElementById('videoPlayer');
+
+  videoPlayer.style.width = videoElement.width + 'px';
+  videoPlayer.style.height = videoElement.height + 'px';
 }
 
 window.addEventListener('resize', function(event) {
