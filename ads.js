@@ -24,34 +24,37 @@ window.addEventListener('load', function(event) {
 });
 
 function resizeAdToWebView(widthWV, heightWV) {
+  var aspectRatio = 16 / 9; // Maintain the 16:9 aspect ratio
+
   var width = widthWV;
   var height = heightWV;
 
   var vidPlayerWidth = width;
-  var vidPlayerHeight = height;
+  var vidPlayerHeight = width / aspectRatio;
 
-  // Ensure the aspect ratio (16:9) is maintained
-  var aspectRatio = 16 / 9;
-  if (width / height > aspectRatio) {
+  if (vidPlayerHeight > height) {
+    vidPlayerHeight = height;
     vidPlayerWidth = height * aspectRatio;
-  } else {
-    vidPlayerHeight = width / aspectRatio;
   }
 
-  // Apply the new dimensions to the video element and the ads manager
-  if (adsManager) {
-    adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
-  }
-
+  // Set the video player size and center it
   const videoPlayer = document.getElementById('video-container');
   const videoElement = document.getElementById('video-element');
 
   videoPlayer.style.width = vidPlayerWidth + 'px';
   videoPlayer.style.height = vidPlayerHeight + 'px';
 
-  videoElement.style.width = vidPlayerWidth + 'px';
-  videoElement.style.height = vidPlayerHeight + 'px';
+  videoElement.style.width = '100%';
+  videoElement.style.height = '100%';
+
+  videoPlayer.style.margin = '0 auto'; // Center the video player
+
+  // Resize the ad container
+  if (adsManager) {
+    adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
+  }
 }
+
 
 
 // Trigger resize on window resize
