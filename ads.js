@@ -23,12 +23,23 @@ window.addEventListener('load', function(event) {
   });
 });
 
-window.addEventListener('resize', function(event) {
+function resizeAdToWebView() {
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
   if (adsManager) {
-    var width = videoElement.clientWidth;
-    var height = videoElement.clientHeight;
+    // Resize the AdsManager to match the web view dimensions
     adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
   }
+}
+
+window.addEventListener('resize', function(event) {
+  // if (adsManager) {
+  //   var width = videoElement.clientWidth;
+  //   var height = videoElement.clientHeight;
+  //   adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+  resizeAdToWebView();
+  
 });
 
 function initializeIMA() {
