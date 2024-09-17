@@ -33,21 +33,22 @@ function resizeAdToWebView(widthWV, heightWV) {
     var width = widthWV;
     var height = heightWV;
 
-  if (adsManager) {
-    // Resize the AdsManager to match the web view dimensions
     var widthMargin = width/10;
     var heightMargin = height/10;
 
     var vidPlayerWidth = width - widthMargin;
     var vidPlayerHeight = height - heightMargin;
 
-    adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
-
     const videoPlayer = document.getElementById('videoPlayer');
 
     // Apply the new dimensions to the video element
     videoPlayer.style.width = vidPlayerWidth + 'px';
     videoPlayer.style.height = vidPlayerHeight + 'px';
+
+
+  if (adsManager) {
+    // Resize the AdsManager to match the web view dimensions
+    adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
   }
 }
 
