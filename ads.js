@@ -7,20 +7,14 @@ var adsManager;
 
 window.addEventListener('load', function(event) {
   videoElement = document.getElementById('video-element');
-  var playButton = document.getElementById('play-button');
+  
+  // Set video element to muted to allow autoplay
+  videoElement.muted = true; // Mute the video to allow autoplay
 
-  playButton.addEventListener('click', function(event) {
-    event.preventDefault();
-
-    if (!adsLoaded) {
-      // Initialize the IMA SDK and load ads
-      initializeIMA();
-      videoElement.pause();  // Pause content for ad loading
-      loadAds(event);
-    } else {
-      videoElement.play();
-    }
-  });
+  // Automatically initialize IMA SDK and load ads
+  initializeIMA();
+  videoElement.pause();  // Pause content for ad loading
+  loadAds(event);
 });
 
 function resizeAdToWebView(widthWV, heightWV) {
@@ -52,13 +46,6 @@ function resizeAdToWebView(widthWV, heightWV) {
     adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
   }
 }
-
-
-
-// Trigger resize on window resize
-window.addEventListener('resize', function(event) {
-  resizeAdToWebView(window.innerWidth, window.innerHeight);
-});
 
 function initializeIMA() {
   console.log("Initializing IMA");
@@ -94,10 +81,9 @@ function loadAds(event) {
   console.log("Loading ads");
 
   var adsRequest = new google.ima.AdsRequest();
-  adsRequest.setAdWillAutoPlay(true);
+  
   adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?' +
     'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
-    
 
   adsRequest.linearAdSlotWidth = videoElement.clientWidth;
   adsRequest.linearAdSlotHeight = videoElement.clientHeight;
