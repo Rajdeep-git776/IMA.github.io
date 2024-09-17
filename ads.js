@@ -12,6 +12,8 @@ window.addEventListener('load', function(event) {
   playButton.addEventListener('click', function(event) {
     event.preventDefault();
 
+      // test comment
+
     if (!adsLoaded) {
       // Initialize the IMA SDK and load ads
       initializeIMA();
