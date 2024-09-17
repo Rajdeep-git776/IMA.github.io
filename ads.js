@@ -44,8 +44,8 @@ function resizeAdToWebView(widthWV, heightWV) {
   videoPlayer.style.width = widthWV + 'px';
   videoPlayer.style.height = heightWV + 'px';
   
-  videoElement.style.width = '100%';
-  videoElement.style.height = '100%';
+  videoElement.style.width = widthWV;
+  videoElement.style.height = heightWV;
 
   // Resize the ad container
   if (adsManager) {
