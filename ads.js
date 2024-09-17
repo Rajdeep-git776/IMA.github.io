@@ -86,6 +86,12 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
   adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdEvent);
+  adsManager.addEventListener(google.ima.AdEvent.Type.LOADED,onAdEvent);
+adsManager.addEventListener(google.ima.AdEvent.Type.STARTED,onAdEvent);
+adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE,onAdEvent);
+adsManager.addEventListener(google.ima.AdEvent.Type.FIRST_QUARTILE,onAdEvent);
+adsManager.addEventListener(google.ima.AdEvent.Type.MIDPOINT,onAdEvent);
+adsManager.addEventListener(google.ima.AdEvent.Type.THIRD_QUARTILE,onAdEvent);
 
   var width = videoElement.clientWidth;
   var height = videoElement.clientHeight;
