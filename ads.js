@@ -27,21 +27,32 @@ function resizeAdToWebView(widthWV, heightWV) {
   var width = widthWV;
   var height = heightWV;
 
-  var widthMargin = width / 10;
-  var heightMargin = height / 10;
+  var vidPlayerWidth = width;
+  var vidPlayerHeight = height;
 
-  var vidPlayerWidth = width - widthMargin;
-  var vidPlayerHeight = height - heightMargin;
+  // Ensure the aspect ratio (16:9) is maintained
+  var aspectRatio = 16 / 9;
+  if (width / height > aspectRatio) {
+    vidPlayerWidth = height * aspectRatio;
+  } else {
+    vidPlayerHeight = width / aspectRatio;
+  }
 
   // Apply the new dimensions to the video element and the ads manager
   if (adsManager) {
     adsManager.resize(vidPlayerWidth, vidPlayerHeight, google.ima.ViewMode.NORMAL);
   }
 
-  const videoPlayer = document.getElementById('video-container'); // Corrected ID
+  const videoPlayer = document.getElementById('video-container');
+  const videoElement = document.getElementById('video-element');
+
   videoPlayer.style.width = vidPlayerWidth + 'px';
   videoPlayer.style.height = vidPlayerHeight + 'px';
+
+  videoElement.style.width = vidPlayerWidth + 'px';
+  videoElement.style.height = vidPlayerHeight + 'px';
 }
+
 
 // Trigger resize on window resize
 window.addEventListener('resize', function(event) {
