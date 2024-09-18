@@ -20,8 +20,7 @@ body, html {
   object-fit: cover;  /* Ensures video fits inside its container without cropping */
   width: 100%;          /* Video takes full width */
   height: 100%;         /* Video takes full height */
-  max-width: 100%;
-  max-height: 100%;
+  
 }
 
 #ad-container {
