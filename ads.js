@@ -8,22 +8,25 @@ var adsManager;
 window.addEventListener('load', function(event) {
   videoElement = document.getElementById('video-element');
   videoElement.muted = true;
-  var playButton = document.getElementById('play-button');
+  initializeIMA();
+  videoElement.pause();
+  loadAds(event);
+  //var playButton = document.getElementById('play-button');
 
-  playButton.addEventListener('click', function(event) {
-    event.preventDefault();
+  // playButton.addEventListener('click', function(event) {
+  //   event.preventDefault();
 
-      // test comment
+  //     // test comment
 
-    if (!adsLoaded) {
-      // Initialize the IMA SDK and load ads
-      initializeIMA();
-      videoElement.pause();  // Pause content for ad loading
-      loadAds(event);
-    } else {
-      videoElement.play();
-    }
-  });
+  //   if (!adsLoaded) {
+  //     // Initialize the IMA SDK and load ads
+  //     initializeIMA();
+  //     videoElement.pause();  // Pause content for ad loading
+  //     loadAds(event);
+  //   } else {
+  //     videoElement.play();
+  //   }
+  // });
 });
 
 function resizeAdToWebView(widthWV, heightWV) {
