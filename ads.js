@@ -97,9 +97,10 @@ function loadAds(event) {
   console.log("Loading ads");
 
   var adsRequest = new google.ima.AdsRequest();
-  //adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?'+'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
+  adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?'+'iu=/23081990290/com.SampleInc.sample_VAST_Test&description_url=[placeholder]&tfcd=0&npa=0&sz=1x1%7C300x250%7C320x180%7C336x280%7C360x640%7C400x300%7C640x360%7C640x480&max_ad_duration=120000&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=';
 
-  adsRequest.adTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23081990290/Immersive_Video_Test_VAST_13092024&description_url=https%3A%2F%2Fpubscale.com%2Fsolutions%2Fin-game-immersive-ads&tfcd=0&npa=0&sz=300x250%7C320x180%7C336x280%7C400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1&plcmt=1&correlator=";
+  // test mode
+ // adsRequest.adTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?iu=/23081990290/Immersive_Video_Test_VAST_13092024&description_url=https%3A%2F%2Fpubscale.com%2Fsolutions%2Fin-game-immersive-ads&tfcd=0&npa=0&sz=300x250%7C320x180%7C336x280%7C400x300%7C640x360%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&vpmute=1&plcmt=1&correlator=";
 
   adsRequest.linearAdSlotWidth = videoElement.clientWidth;
   adsRequest.linearAdSlotHeight = videoElement.clientHeight;
