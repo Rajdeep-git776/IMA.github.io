@@ -29,7 +29,7 @@ body, html {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;  /* Ensures ads don't interfere with user interaction */
+  pointer-events: auto;  /* Ensures ads don't interfere with user interaction */
   display: flex;
   justify-content: center;
   align-items: center;
