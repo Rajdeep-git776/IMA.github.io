@@ -10,33 +10,14 @@
     <div id="page-content">
       <div id="video-container">
         <video id="video-element" controls>
-          <source src="https://storage.googleapis.com/neo_static_bucket/file.mp4" type="video/mp4">
-          <source src="https://storage.googleapis.com/interactive-media-ads/media/android.webm" type="video/webm">
+          <source src="https://storage.googleapis.com/neo_static_bucket/file.mp4">
+          <source src="https://storage.googleapis.com/interactive-media-ads/media/android.webm">
         </video>
         <div id="ad-container"></div>
       </div>
+      <!-- <button id="play-button">Play</button> -->
     </div>
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
     <script src="ads.js"></script>
-    <script>
-      // Function to hide the mute button
-      function hideMuteButton() {
-        const videoElement = document.getElementById('video-element');
-
-        // Wait until the video controls are loaded
-        const intervalId = setInterval(() => {
-          // Find the mute button in the video controls
-          const muteButton = videoElement.parentElement.querySelector('button[title="Mute"], button[title="Unmute"]');
-
-          if (muteButton) {
-            muteButton.style.display = 'none'; // Hide the mute button
-            clearInterval(intervalId); // Stop checking once it's hidden
-          }
-        }, 100); // Check every 100ms
-      }
-
-      // Call the function when the window loads
-      window.onload = hideMuteButton;
-    </script>
   </body>
 </html>
