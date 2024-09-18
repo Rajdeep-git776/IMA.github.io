@@ -13,12 +13,15 @@ body, html {
   width: 100%;
   height: 100%;
   position: relative;
+  background-color: black;  /* Optional: to handle blank space */
 }
 
 #video-element {
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
+  object-fit: contain;  /* Ensures video fits inside its container without cropping */
+  width: 100%;          /* Video takes full width */
+  height: 100%;         /* Video takes full height */
+  max-width: 100%;
+  max-height: 100%;
 }
 
 #ad-container {
@@ -27,5 +30,14 @@ body, html {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  pointer-events: none;  /* Ensures ads don't interfere with user interaction */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#ad-container iframe, #ad-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* Ensures ad content fits without cropping */
 }
