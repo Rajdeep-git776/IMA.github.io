@@ -19,7 +19,8 @@ body, html {
 #video-element {
   object-fit: cover;  /* Ensures video fits inside its container without cropping */
   width: 100%;          /* Video takes full width */
-  height: 100%;         /* Video takes full height */
+  height: 100%;
+  background-color: purple;         /* Video takes full height */
   
 }
 
