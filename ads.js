@@ -7,6 +7,7 @@ var adsManager;
 
 window.addEventListener('load', function(event) {
   videoElement = document.getElementById('video-element');
+  videoElement.muted = true;
   var playButton = document.getElementById('play-button');
 
   playButton.addEventListener('click', function(event) {
