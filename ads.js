@@ -7,7 +7,7 @@ var adsManager;
 
 window.addEventListener('load', function(event) {
   videoElement = document.getElementById('video-element');
-  videoElement.muted = true;
+ //videoElement.muted = false;
   initializeIMA();
   videoElement.pause();
   loadAds(event);
